@@ -25,7 +25,6 @@ function task2(time) {
   });
 }
 
-
 function myPromiseAll(promises) {
   const results = new Array(promises.length);
   let resolvedCount = 0;
@@ -121,7 +120,6 @@ function race(promises) {
   });
 }
 
-
 /**
  * race([task2(3030), task2(3050),task2(2000)])
  *   .then(function (value) {
@@ -132,3 +130,55 @@ function race(promises) {
  *   });
  */
 
+//Promise.finally()
+/**
+ * ● We have to take a callback function as an input and call this
+    callback function when the promise is settled which is either
+    after resolve or reject.
+    ● Since there is no reliable way to tell if the promise was
+    accepted or refused, a finally callback will not receive any
+    argument.
+    ● It will provide you with a promise that you can use to
+    compose calls to other promise methods in a chain.
+ */
+
+Promise.prototype.myFinally = function (callback) {
+  if (typeof callback !== 'function') {
+    return this.then(callback, callback);
+  }
+
+  const P = this.constructor || Promise;
+
+  return this.then(
+    (value) => P.resolve(callback()).then(() => value),
+    (error) =>
+      P.resolve(callback()).then(() => {
+        throw error;
+      }),
+  );
+};
+
+// new Promise((resolve, reject) => {
+//   if (Math.random() * 10 > 5) {
+//     resolve('resolved');
+//   } else {
+//     reject('rejected');
+//   }
+// })
+//   .then((v) => console.log(v))
+//   .catch((e) => console.log(e))
+//   .myFinally(() => console.log('calling my finally'));
+
+function allSettled(promises = []) {
+  const mappedPromises = promises.map((p) =>
+    Promise.resolve(p).then(
+      (value) => ({ status: 'filefield', value }),
+      (error) => ({ status: 'rejected', reason: error }),
+    ),
+  );
+  return Promise.all(mappedPromises);
+}
+
+allSettled([task2(3030), task2(3050), task2(2000)]).then((results) =>
+  console.log('results:', results),
+);
