@@ -1,5 +1,6 @@
 
 (function () {
+    //Debounce function
     function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
         let timerId: ReturnType<typeof setTimeout>;
         return function (this: any, ...args: Parameters<T>) {
@@ -7,7 +8,8 @@
             timerId = setTimeout(() => fn.apply(this, args), delay);
         };
     }
-    function createBlocks() {
+    //Create blocks and append in wrapper
+    (function createBlocks() {
         const wrapper = document.querySelector(".wrapper") as HTMLDivElement;
         const blocks = Array.from({ length: 64 }, (_, i) => {
             const block = document.createElement("div");
@@ -16,13 +18,13 @@
             return block;
         });
         wrapper.append(...blocks);
-    }
-    createBlocks();
+    })()
+    //Check if block is in view
     function isInViewPort(block: HTMLDivElement) {
         const rect = block?.getBoundingClientRect();
         return rect?.top >= 0 && rect?.left >= 0 && rect.bottom <= document.documentElement.clientHeight && rect.right <= document.documentElement.clientWidth
     }
-
+    //Detect blocks in view and print
     function detect() {
         const results: string[] = [];
         document.querySelectorAll<HTMLDivElement>(".block")

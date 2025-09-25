@@ -1,4 +1,5 @@
 (function () {
+    //Debounce function
     function debounce(fn, delay) {
         var timerId;
         return function () {
@@ -11,7 +12,8 @@
             timerId = setTimeout(function () { return fn.apply(_this, args); }, delay);
         };
     }
-    function createBlocks() {
+    //Create blocks and append in wrapper
+    (function createBlocks() {
         var wrapper = document.querySelector(".wrapper");
         var blocks = Array.from({ length: 64 }, function (_, i) {
             var block = document.createElement("div");
@@ -20,12 +22,13 @@
             return block;
         });
         wrapper.append.apply(wrapper, blocks);
-    }
-    createBlocks();
+    })();
+    //Check if block is in view
     function isInViewPort(block) {
         var rect = block === null || block === void 0 ? void 0 : block.getBoundingClientRect();
         return (rect === null || rect === void 0 ? void 0 : rect.top) >= 0 && (rect === null || rect === void 0 ? void 0 : rect.left) >= 0 && rect.bottom <= document.documentElement.clientHeight && rect.right <= document.documentElement.clientWidth;
     }
+    //Detect blocks in view and print
     function detect() {
         var results = [];
         document.querySelectorAll(".block")
