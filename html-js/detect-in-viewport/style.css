@@ -1,0 +1,10 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.block {
+  background-color: rgb(68, 10, 227);
+  padding: 20px;
+  height: 100px;
+}
